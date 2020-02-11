@@ -1,8 +1,10 @@
 
 2020/02
 
-
+* 	MIT LICENCE
 *   TsfUwpPad  
-    MS’ñ‹Ÿ‚Ìtsfpad-step1 sample‚ğuwp—p‚É¬C³
-    Winrt‚È‚Ì‚ÅHWND‚Í‚ ‚è‚Ü‚¹‚ñ
+    MSæä¾›ã®tsfpad-step1 sampleã‚’uwpç”¨ã«å°ä¿®æ­£  
+    WinRTãªã®ã§HWNDã¯ã‚ã‚Šã¾ã›ã‚“  
+    ãƒ“ãƒ«ãƒ‰ã«ã¯VS2019 + Microsoft.Windows.CppWinRT packageãŒå¿…è¦  
+    
 
