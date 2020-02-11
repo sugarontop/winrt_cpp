@@ -77,8 +77,11 @@ HRESULT TestWindow::DefWndProc(D2DWinrtEx* sender, UINT msg, INT_PTR wp, INT_PTR
                 }
                 break;
                 case VK_DELETE:
-                {                    
-                    g_editor->DeleteSelection();
+                {
+                    if (g_editor->GetSelectionStart() != g_editor->GetSelectionEnd())
+                        g_editor->DeleteSelection();
+                    else
+                        g_editor->DeleteAtSelection(FALSE);
                 }
                 break;
             }

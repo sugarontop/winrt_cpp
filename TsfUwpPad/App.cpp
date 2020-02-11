@@ -224,16 +224,6 @@ struct App : implements<App, IFrameworkViewSource, IFrameworkView>
     {
     }
 
-    /*void Run2()
-    {
-        CoreWindow const window{ CoreWindow::GetForCurrentThread() };
-        window.Activate();
-
-        Render();
-        CoreDispatcher const dispatcher{ window.Dispatcher() };
-        dispatcher.ProcessEvents(CoreProcessEventsOption::ProcessUntilQuit);
-    }*/
-
     void Run()
     {
         CoreWindow const window{ CoreWindow::GetForCurrentThread() };
