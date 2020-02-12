@@ -4,8 +4,13 @@
 #include "libsrc/caret.h"
 
 using namespace winrt;
+using namespace Windows;
 using namespace Windows::UI;
 using namespace Windows::UI::Core;
+using namespace Windows::UI::Input;
+using namespace Windows::ApplicationModel::Core;
+using namespace Windows::System;
+
 
 using namespace V5;
 
@@ -71,9 +76,12 @@ void D2DWinrtEx::OnPointerPressed(IInspectable const &, PointerEventArgs const &
 
     V5::MouseEvent ev;
     ev.pt = FPointF(p.RawPosition().X,p.RawPosition().Y);
-    ev.bLeft = 1;
+    ev.bLeft = (int)p.Properties().PointerUpdateKind(); // 1: lbuttondown
     
-    DefWndProc( this, WM_LBUTTONDOWN,(INT_PTR)&ev, (INT_PTR)&ev );
+    if (PointerUpdateKind::LeftButtonPressed == p.Properties().PointerUpdateKind())
+        DefWndProc(this, WM_LBUTTONDOWN, (INT_PTR)&ev, (INT_PTR)&ev);
+    else if (PointerUpdateKind::RightButtonPressed == p.Properties().PointerUpdateKind())
+        DefWndProc(this, WM_RBUTTONDOWN, (INT_PTR)&ev, (INT_PTR)&ev);
 
     bRedraw_ = true;
 }
@@ -95,9 +103,12 @@ void D2DWinrtEx::OnPointerReleased(IInspectable const &, PointerEventArgs const 
 
     V5::MouseEvent ev;
     ev.pt = FPointF(p.RawPosition().X,p.RawPosition().Y);
-    ev.bLeft = 1;
+    ev.bLeft = (int)p.Properties().PointerUpdateKind(); // 1: lbuttondown
 
-    DefWndProc( this, WM_LBUTTONUP,(INT_PTR)&ev,(INT_PTR)&ev);
+    if (PointerUpdateKind::LeftButtonReleased == p.Properties().PointerUpdateKind())
+        DefWndProc(this, WM_LBUTTONUP, (INT_PTR)&ev, (INT_PTR)&ev);
+    else if (PointerUpdateKind::RightButtonReleased == p.Properties().PointerUpdateKind())
+        DefWndProc(this, WM_RBUTTONUP, (INT_PTR)&ev, (INT_PTR)&ev);
 
     bRedraw_ = true;
 }
@@ -117,6 +128,10 @@ void D2DWinrtEx::OnPointerWheelChanged(IInspectable const&, PointerEventArgs con
 void D2DWinrtEx::OnKeyDown(IInspectable const &, KeyEventArgs const & args)
 {
     V5::KeyEvent ev;
+    auto win = CoreWindow::GetForCurrentThread();
+    ev.IsPressShift = ((int)win.GetKeyState(VirtualKey::Shift) != 0);       //winrt::Windows::System::VirtualKey
+    ev.IsPressControl = ((int)win.GetKeyState(VirtualKey::Control) != 0);
+
     winrt::Windows::System::VirtualKey k = args.VirtualKey();
     ev.key = (int)k;
     DefWndProc( this, WM_KEYDOWN,(INT_PTR)0,(INT_PTR)&ev);
@@ -125,6 +140,10 @@ void D2DWinrtEx::OnKeyDown(IInspectable const &, KeyEventArgs const & args)
 void D2DWinrtEx::OnKeyUp(IInspectable const &, KeyEventArgs const & args)
 {
     V5::KeyEvent ev;
+    auto win = CoreWindow::GetForCurrentThread();
+    ev.IsPressShift = ((int)win.GetKeyState(VirtualKey::Shift) != 0);       //winrt::Windows::System::VirtualKey
+    ev.IsPressControl = ((int)win.GetKeyState(VirtualKey::Control) != 0);
+
     winrt::Windows::System::VirtualKey k = args.VirtualKey();
     ev.key = (int)k;
     DefWndProc( this, WM_KEYUP,(INT_PTR)0,(INT_PTR)&ev);
@@ -165,7 +184,11 @@ void D2DWinrtEx::ReleaseDeviceResources()
     cxt_.DestroyRenderTargetResource();
 }
 
+void D2DWinrtEx::Close()
+{
+    DefWndProc(this, WM_DESTROY, (INT_PTR)0, (INT_PTR)0);
 
+}
 
 
 

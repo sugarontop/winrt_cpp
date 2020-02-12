@@ -4,9 +4,11 @@
 
 using namespace winrt;
 using namespace Windows;
-using namespace Windows::ApplicationModel::Core;
 using namespace Windows::UI;
 using namespace Windows::UI::Core;
+using namespace Windows::UI::Input;
+using namespace Windows::ApplicationModel::Core;
+using namespace Windows::System;
 using namespace Windows::Graphics::Display;
 
 static D2DWinrt* pd2dwinrt = nullptr;
@@ -238,6 +240,8 @@ struct App : implements<App, IFrameworkViewSource, IFrameworkView>
                 Render();
 
         }
+
+        d2dwinrt.Close();
 
         window.Close();
     }

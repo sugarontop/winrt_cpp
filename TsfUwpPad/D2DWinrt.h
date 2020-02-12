@@ -21,6 +21,7 @@ class D2DWinrt
 	virtual void CreateDeviceResources(winrt::com_ptr<ID2D1DeviceContext> cxt)=0;
 	virtual void ReleaseDeviceResources()=0;
 	virtual void OnEntry()=0;
+	virtual void Close()=0;
 
 	static D2DWinrt& CreeateInstance();
 	protected :

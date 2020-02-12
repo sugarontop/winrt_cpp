@@ -36,6 +36,11 @@ HRESULT TestWindow::DefWndProc(D2DWinrtEx* sender, UINT msg, INT_PTR wp, INT_PTR
             OnMouseMove(wp, lp);
         }
         break;
+        case WM_DESTROY:
+        {
+            OnDestroy();
+        }
+        break;
         case WM_KEYDOWN:
         {
             V5::KeyEvent& ev = *(V5::KeyEvent*)lp;
@@ -174,7 +179,13 @@ void TestWindow::AddReturn()
     g_editor->InsertAtSelection(L"\n"); // LF
 }
 
+void TestWindow::OnDestroy()
+{
+    g_editor->UninitTSF();
+    delete g_editor;
+    g_editor = nullptr;
 
+}
 ///////////////////////////////////////////////////////
 BOOL InitTSF();
 void OnEntry(D2DWinrtEx* win)

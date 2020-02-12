@@ -16,6 +16,7 @@ class TestWindow
 		void OnLButtonDown(INT_PTR wParam, INT_PTR lParam);
 		void OnLButtonUp(INT_PTR wParam, INT_PTR lParam);
 		void AddReturn();
+		void OnDestroy();
 
 		UINT _uSelDragStart;
 		bool IsCapture_;
@@ -31,7 +32,7 @@ class D2DWinrtEx : public D2DWinrt, public TestWindow //, public V5::D2DMainWind
 		void SetWindow(Windows::UI::Core::CoreWindow const& window) override;
 
 		virtual V5::D2DContext* cxt();
-		virtual void Close(){}
+		virtual void Close();
 
 		virtual void OnDraw() override;
 		virtual bool IsClose() { return bClose_; }

@@ -15,6 +15,8 @@ struct MouseEvent
 struct KeyEvent
 {
 	int key;
+	bool IsPressShift;
+	bool IsPressControl;
 
 };
 struct SizeChangeEvent

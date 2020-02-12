@@ -305,7 +305,11 @@ BOOL CTextEditor::UninitTSF()
         _pTextStore->Release();
         _pTextStore = NULL;
     }
-
+    if (g_pThreadMgr)
+    {
+        g_pThreadMgr->Release();
+        g_pThreadMgr = NULL;
+    }
     return TRUE;
 }
 
