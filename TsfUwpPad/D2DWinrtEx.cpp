@@ -129,8 +129,8 @@ void D2DWinrtEx::OnKeyDown(IInspectable const &, KeyEventArgs const & args)
 {
     V5::KeyEvent ev;
     auto win = CoreWindow::GetForCurrentThread();
-    ev.IsPressShift = ((int)win.GetKeyState(VirtualKey::Shift) != 0);       //winrt::Windows::System::VirtualKey
-    ev.IsPressControl = ((int)win.GetKeyState(VirtualKey::Control) != 0);
+    ev.IsPressShift = (((UINT)win.GetKeyState(VirtualKey::Shift) & 0x1) > 0);
+    ev.IsPressControl = (((UINT)win.GetKeyState(VirtualKey::Control) & 0x1) > 0);
 
     winrt::Windows::System::VirtualKey k = args.VirtualKey();
     ev.key = (int)k;
@@ -141,8 +141,8 @@ void D2DWinrtEx::OnKeyUp(IInspectable const &, KeyEventArgs const & args)
 {
     V5::KeyEvent ev;
     auto win = CoreWindow::GetForCurrentThread();
-    ev.IsPressShift = ((int)win.GetKeyState(VirtualKey::Shift) != 0);       //winrt::Windows::System::VirtualKey
-    ev.IsPressControl = ((int)win.GetKeyState(VirtualKey::Control) != 0);
+    ev.IsPressShift = (((UINT)win.GetKeyState(VirtualKey::Shift) & 0x1) > 0);
+    ev.IsPressControl = (((UINT)win.GetKeyState(VirtualKey::Control) & 0x1) > 0);
 
     winrt::Windows::System::VirtualKey k = args.VirtualKey();
     ev.key = (int)k;
