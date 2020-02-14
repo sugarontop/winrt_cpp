@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "TextLayout.h"
 #include "libsrc/D2DContext.h"
 #include "libsrc/caret.h"
@@ -98,11 +98,12 @@ BOOL CTextLayout::Layout(D2DContext* cxt, const WCHAR *psz,  UINT nCnt)
     std::vector<RECT> rcs;
 
     layouts_.resize(_nLineCnt);
-
+    UINT j;
     // Get the rectangle of each characters.
     for (i = 0; i < _nLineCnt; i++)
     {
         _prgLines[i].prgCharInfo = NULL;
+        j = 0;
 
         if (_prgLines[i].nCnt)
         {
@@ -116,7 +117,7 @@ BOOL CTextLayout::Layout(D2DContext* cxt, const WCHAR *psz,  UINT nCnt)
                 
             layouts_[i] = layout;
 
-            UINT j;
+            
             POINT ptPrev = ptCurrent;
             for (j = 0; j < _prgLines[i].nCnt; j++)
             {
@@ -140,17 +141,19 @@ BOOL CTextLayout::Layout(D2DContext* cxt, const WCHAR *psz,  UINT nCnt)
         }
 
         char_off += _prgLines[i].nCnt;
-        char_off++; // LF•ª
+        char_off++; // LFåˆ†
 
 
-        // LF‚Í•=0‚Æ‚µ‚Ä
+        // LFã¯å¹…=0ã¨ã—ã¦
         {
             auto it = rcs.end()-1;
             RECT rc = *it;
             rc.left = rc.right;
             rc.top = ptCurrent.y;
             rc.bottom = rc.top + _nLineHeight;
-
+            if (j == 0) {
+                rc.left = rc.right = 0;
+            }
 
             rcs.push_back(rc);
         }
@@ -210,7 +213,47 @@ BOOL CTextLayout::Render(D2DContext* pcxt, const WCHAR *psz,  UINT nCnt, UINT nS
 
     }
 
+    //
+   // reder LF
+   //
+    for (UINT i = 0; i < V5::Caret::GetCaret().rcs.size(); i++)
+    {
+        auto rc = V5::Caret::GetCaret().rcs[i];
 
+        if (rc.left == rc.right)
+        {
+            V5::FRectF rcf = rc;
+
+            rcf.left++;
+            rcf.right = rcf.left + 40;
+
+            cxt.cxt->DrawText(L"âŽ", 1, cxt.cxtt.textformat, rcf, cxt.green);
+        }
+    }
+
+    //
+    // EOF
+    //
+    V5::FRectF rcf;
+    if (!V5::Caret::GetCaret().rcs.empty())
+    {
+        auto it = V5::Caret::GetCaret().rcs.end() - 1;
+        rcf = *it;
+        if (rcf.left == rcf.right)
+        {
+            rcf.Offset(0, rcf.Height());
+            rcf.left = rcf.right = 0;
+        }
+
+        rcf.left++;
+        rcf.right = rcf.left + 40;
+    }
+    else
+    {
+        rcf.SetRect(1, 0, 41, ROW_HEIGHT);
+    }
+
+    cxt.cxt->DrawText(L"[EOF]", 5, cxt.cxtt.textformat, rcf, cxt.green);
 
     return TRUE;
 }
